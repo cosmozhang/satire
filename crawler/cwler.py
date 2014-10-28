@@ -27,7 +27,7 @@ def CreateText():
                     body = extract[0].p.string.encode("utf-8")
                     # print body
                 n += 1
-                h = open('./txts/satire-' + str(n) +'.txt', 'w')
+                h = open('./oniontxts/satire-' + str(n) +'.txt', 'w')
                 h.write(head + "\n" + body + "\n")
                 h.close()
 

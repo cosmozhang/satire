@@ -3,4 +3,5 @@ pyexamples/*
 svml/*
 stanfordnlp/*
 *.csv
-crawler/txts/*
+crawler/cnntxts/*
+crawler/oniontxts/*
