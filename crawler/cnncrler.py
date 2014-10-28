@@ -100,7 +100,7 @@ def GenLinks():
 
 def main():
     
-    # GenLinks()
+    GenLinks()
     CreateText()
 
     
