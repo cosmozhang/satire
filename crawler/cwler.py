@@ -18,8 +18,8 @@ def CreateText():
             extract = soup.find_all('article', attrs={"class": "full-article"})
             # print extract[0].h1.string
         
-            if ( extract != [] and extract[0].h1 != None and extract[0].p != None):
-
+            if ( extract != [] and extract[0].h1 != None and extract[0].p != None and soup.p.next_sibling == None):
+                # if soup.p.next_sibling != None: print soup.p.next_sibling
                 head = extract[0].h1.string.encode("utf-8")
                 if extract[0].p.string == None: 
                     body = ''.join([x.encode("utf-8") for x in extract[0].p.strings])
