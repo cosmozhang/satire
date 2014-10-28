@@ -18,14 +18,29 @@ def CreateText():
             extract = soup.find_all('article', attrs={"class": "full-article"})
             # print extract[0].h1.string
         
-            if ( extract != [] and extract[0].h1 != None and extract[0].p != None and soup.p.next_sibling == None):
-                # if soup.p.next_sibling != None: print soup.p.next_sibling
+            if ( extract != [] and extract[0].h1 != None and extract[0].p != None):
+                
                 head = extract[0].h1.string.encode("utf-8")
+                body = ""
+                for block in extract[0].find_all("p"):#.findall('p'):
+                    body += " ".join([x.encode("utf-8") for x in block.strings]) + " "#"".join(block.strings)#"".join(block.p.strings)
+                if extract[0].p.next_sibling != None: #pass #print extract[0].p.next_sibling
+                    for block in extract[0].p.next_sibling:
+                        ls = []
+                        for x in block.strings:
+                            print x
+                            ls.append(x.encode("utf-8"))
+                        body += " ".join(ls) + ". "
+                    # print x. + "\n"
+                #print extract[0].p.next_sibling
+                print body
+                '''
                 if extract[0].p.string == None: 
-                    body = ''.join([x.encode("utf-8") for x in extract[0].p.strings])
+                    body = " ".join([x.encode("utf-8") for x in extract[0].p.strings])
                 else:
                     body = extract[0].p.string.encode("utf-8")
                     # print body
+                '''
                 n += 1
                 h = open('./oniontxts/satire-' + str(n) +'.txt', 'w')
                 h.write(head + "\n" + body + "\n")

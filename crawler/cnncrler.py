@@ -36,7 +36,7 @@ def CreateText():
                 head = extract[0].a.string.encode("utf-8") #head test successful
                 body = ""
                 for block in extract[0].find('div', attrs={"class": "cnnBlogContentPost"}).find_all('p'):#.findall('p'):
-                    body += "".join([x.encode("utf-8") for x in block.strings])#"".join(block.strings)#"".join(block.p.strings)
+                    body += " ".join([x.encode("utf-8") for x in block.strings]) + " "#"".join(block.strings)#"".join(block.p.strings)
                 #print body.replace("FULL STORY", "")
                 '''
                 if extract[0].p.string == None: 
