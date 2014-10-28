@@ -3,3 +3,4 @@ pyexamples/*
 example1/*
 stanfordnlp/*
 *.csv
+crawler/txts/*

@@ -62,8 +62,8 @@ def main():
     train_data, hgdic = dealdt('training', hgdic)
     test_data, hgdic = dealdt('test', hgdic)
     
-    f = open('traindtsvm.csv', 'w')
-    g = open('testdtsvm.csv', 'w')
+    f = open('traindtsvm_bin.csv', 'w')
+    g = open('testdtsvm_bin.csv', 'w')
     for line in train_data:
         f.write(line + '\n')
     for line in test_data:
