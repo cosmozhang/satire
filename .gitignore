@@ -1,6 +1,6 @@
-satire/*
+satiredata/*
 pyexamples/*
-example1/*
+svml/*
 stanfordnlp/*
 *.csv
 crawler/txts/*
