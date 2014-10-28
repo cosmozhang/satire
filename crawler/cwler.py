@@ -57,7 +57,7 @@ def GenLinks():
         # articlelist = bs4.SoupStrainer("div", class_="article-list")
         soup = bs4.BeautifulSoup(page)
         extract = soup.find_all("article", "article")
-        print type(extract)
+        # print type(extract)
         # print(extract[0])
         for each in extract:
             
