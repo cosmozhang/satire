@@ -2,54 +2,6 @@ import urllib2
 import bs4, re
 import datetime, time
 
-
-def CreateText():
-    f=open('normallinks.txt','r')
-    data = f.readlines()
-    n=0
-    line = data[10]
-    
-    url = "http://"+line.split(": ")[1]
-    page = urllib2.urlopen(url).read()
-    soup = bs4.BeautifulSoup(page)
-    # print soup.h1
-    
-    
-    #print extract[0].find('div', attrs={"class": "cnnBlogContentPost"}).find_all('p')#.strings)
-    
-
-
-    for line in data:
-        
-        url = "http://"+line.split(": ")[1]
-        print url
-        if IsConnectionFailed(url) == True:
-            page = urllib2.urlopen(url).read()
-            soup = bs4.BeautifulSoup(page)
-            # print soup.h1
-            extract = soup.find_all('div', attrs={"class": "cnnRightPost"})
-            
-            # print extract[0].h1.string
-        
-            if ( extract != [] and extract[0].a != None):
-                # if soup.p.next_sibling != None: print soup.p.next_sibling
-                head = extract[0].a.string.encode("utf-8") #head test successful
-                body = ""
-                for block in extract[0].find('div', attrs={"class": "cnnBlogContentPost"}).find_all('p'):#.findall('p'):
-                    body += " ".join([x.encode("utf-8") for x in block.strings]) + " "#"".join(block.strings)#"".join(block.p.strings)
-                #print body.replace("FULL STORY", "")
-                '''
-                if extract[0].p.string == None: 
-                    body = ''.join([x.encode("utf-8") for x in extract[0].p.strings])
-                else:
-                    body = extract[0].p.string.encode("utf-8")
-                    # print body
-                '''
-                n += 1
-                h = open('./cnntxts/normal-' + str(n) +'.txt', 'w')
-                h.write(head + "\n" + body.replace("FULL STORY", "") + "\n")
-                h.close()
-
 def IsConnectionFailed(url):
     """
     check url validity
@@ -60,7 +12,39 @@ def IsConnectionFailed(url):
         return False
     return True
 
-def GenLinks():
+def GenOnionLinks():
+    f = open('satirelinks.txt','w')
+    # print "Enter the URL you wish to crawl.."
+    # print 'Usage  example:- "http://phocks.org/stumble/creepy/" <-- With the double quotes'
+    # input("@> ")
+    n = 0
+    preurl = "http://www.theonion.com"
+    while True:
+        n += 1
+        ourl = "http://www.theonion.com/channels/politics/?page=" + str(n)
+        if IsConnectionFailed(ourl) == False: break
+        page = urllib2.urlopen(ourl).read()
+        # articlelist = bs4.SoupStrainer("div", class_="article-list")
+        soup = bs4.BeautifulSoup(page)
+        extract = soup.find_all("article", "article")
+        # print type(extract)
+        # print(extract[0])
+        for each in extract:
+            
+            dt = each.span.string.strip().replace(",", "")
+            aurl = preurl+each.a['href']#.strip("http://")
+            curday = time.strptime(str(dt),'%b %d %Y')
+            #print curday[:6]
+            # print each.a['href'].split('/')[1]
+            if each.a['href'].split('/')[1] == 'articles':
+                f.write(dt + ": " + aurl.strip("http://") + "\n")
+        if datetime.datetime(* curday[:6]) < datetime.datetime(2010,4,30): break
+        print n
+        # for link in extract.find_all('a'):
+    print "********\nonionLinkfile generated\n********"
+    f.close()
+
+def GenCnnLinks():
     f = open('normallinks.txt','w')
     # print "Enter the URL you wish to crawl.."
     # print 'Usage  example:- "http://phocks.org/stumble/creepy/" <-- With the double quotes'
@@ -95,14 +79,13 @@ def GenLinks():
         if datetime.datetime(* curday[:6]) < datetime.datetime(2010,4,30): break
         print n
         # for link in extract.find_all('a'):
-    print "********\nLinkfile generated\n********"
+    print "********\ncnnLinkfile generated\n********"
     f.close()
 
 def main():
     
-    GenLinks()
-    CreateText()
-
+    GenOnionLinks()
+    GenCnnLinks()
     
 
 
