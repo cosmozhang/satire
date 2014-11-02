@@ -1,6 +1,7 @@
 import urllib2
 import bs4, re
 import datetime, time
+import sys
 
 def IsConnectionFailed(url):
     """
@@ -35,10 +36,10 @@ def CreateOnionText():
                     for block in extract[0].find("div", attrs={"class": "article-body"}).find_all("p"):
                         body += " ".join([x.encode("utf-8").strip() for x in block.strings]) + " "
                     
-                    if (extract[0].find("div", attrs={"class": "article-body"}).p.next_sibling != None and extract[0].find("div", attrs={"class": "article-body"}).p.next_sibling.find("ul") != None):
+                    if (extract[0].find("div", attrs={"class": "article-body"}).p.next_sibling != None):
                         try:
                             for block in extract[0].find("div", attrs={"class": "article-body"}).p.next_sibling:
-                                ls = [x.encode("utf-8").strip() for x in block.strings]
+                                ls = [x.encode("utf-8").strip() for x in block.strings if "Follow @politicalticker" not in x]
                                 body += " ".join(ls) + ". "
                         except:
                             body = ""
@@ -57,8 +58,8 @@ def CreateOnionText():
                 '''
                 if len(body) > 50:
                     n += 1
-                    h = open('./oniontxts/satire-' + str(n) +'.txt', 'w')
-                    h.write(head + "\n" + body + "\n")
+                    h = open('../rawdata/oniontxts/satire-' + str(n) +'.txt', 'w')
+                    h.write(head + "\n" + body + "\n"  + line.split(": ")[0] + "\n")
                     h.close()
     f.close()
 
@@ -99,15 +100,28 @@ def CreateCnnText():
                 '''
                 if len(body) > 50:
                     n += 1
-                    h = open('./cnntxts/normal-' + str(n) +'.txt', 'w')
-                    h.write(head + "\n" + body.replace("FULL STORY", "") + "\n")
+                    h = open('../rawdata/cnntxts/normal-' + str(n) +'.txt', 'w')
+                    h.write(head + "\n" + body.replace("FULL STORY", "") + "\n" + line.split(": ")[0] + "\n")
                     h.close()
     f.close()
 
 def main():
-    
-    CreateOnionText()
-    CreateCnnText()
-
+    # print sys.argv[1:]
+    if ("-o" in sys.argv[1:] or "onion" in sys.argv[1:]) and ("-c" not in sys.argv[1:] and "cnn" not in sys.argv[1:]):
+        print "craw from onion"
+        CreateOnionText()
+        print "******\ntask finished\n******"
+    elif ("-o" not in sys.argv[1:] and "onion" not in sys.argv[1:]) and ("-c" in sys.argv[1:] or "cnn" in sys.argv[1:]):
+        print "craw from cnn"
+        CreateCnnText()
+        print "******\ntask finished\n******"
+    elif  ("-o" in sys.argv[1:] or "onion" in sys.argv[1:]) and ("-c" in sys.argv[1:] or "cnn" in sys.argv[1:]):
+        print "craw from onion and cnn"
+        CreateOnionText()
+        CreateCnnText()
+        print "******\ntask finished\n******"
+    else:
+        print "argument format: python txtcwler.py [-o|onion; -c|cnn]"   
+        
 if __name__ == "__main__":
     main()

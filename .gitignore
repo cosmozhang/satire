@@ -1,7 +1,11 @@
-satiredata/*
+oldsatire/*
 pyexamples/*
 svml/*
 stanfordnlp/*
 *.csv
-crawler/cnntxts/*
-crawler/oniontxts/*
+rawdata/cnntxts/*
+rawdata/oniontxts/*
+*.tar.gz
+wordrep/*
+vecdis/tokened/*
+
