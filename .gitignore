@@ -8,4 +8,7 @@ rawdata/oniontxts/*
 *.tar.gz
 wordrep/*
 vecdis/tokened/*
+vecdis/tokened_head/*
+vecdis/vectorized/*
+vecdis/vectorized_head/*
 

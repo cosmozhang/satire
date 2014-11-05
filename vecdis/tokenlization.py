@@ -6,6 +6,7 @@
 import nltk
 import string
 import os
+import sys
 
 def get_file_list(dir_path):
 
@@ -32,14 +33,17 @@ def tokenize(tp, path, filename, head):
     bodyraw = preprocess(lines[1])
     # print headraw.lower()
     # print bodyraw.lower()
-    head = nltk.word_tokenize(headraw.lower())
-    body = nltk.word_tokenize(bodyraw.lower())
-    g = open(os.getcwd() + '/./tokened/' + tp + '/' + filename, 'w')
+    headdoc = nltk.word_tokenize(headraw.lower())
+    bodydoc = nltk.word_tokenize(bodyraw.lower())
+    
     if head == True:
-        doc = head
-    else:
-        doc = head + body
-    print filename
+        # print headdoc
+        g = open(os.getcwd() + '/./tokened_head/' + tp + '/' + filename, 'w')
+        doc = headdoc
+    elif head == False:
+        g = open(os.getcwd() + '/./tokened/' + tp + '/' + filename, 'w')
+        doc = headdoc + bodydoc
+    # print filename
     # print doc
     for word in doc:
         # print word
@@ -49,18 +53,26 @@ def tokenize(tp, path, filename, head):
 
 def main():
     # print os.getcwd() + "\n"
-    head = True
+    head = False
+    for arg in sys.argv:
+        if arg == "Head" or arg == "-H":
+            head = True
+    if head == True: 
+        print "Tokenize just head"
+    elif head == False:
+        print "Tokenize the whole document"
     dir_path = os.getcwd() + '/../rawdata/cnntxts/'
     cnnfilels = get_file_list(dir_path)
     for f in cnnfilels:
-    # f = 'normal-449.txt'
         tokenize('normal', dir_path, f, head)
 
 
     dir_path = os.getcwd() + '/../rawdata/oniontxts/'
     onionfilels = get_file_list(dir_path)
-    # for f in onionfilels:
-        # tokenize('satire', dir_path, f, head)
+    for f in onionfilels:
+        tokenize('satire', dir_path, f, head)
+        
+    print "******\nDocuments tokenlized\n******"
 
 
 if __name__ == '__main__':

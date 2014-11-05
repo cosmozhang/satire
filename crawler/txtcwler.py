@@ -34,7 +34,7 @@ def CreateOnionText():
                 body = ""
                 if extract[0].find("div", attrs={"class": "article-body"}).p != None:
                     for block in extract[0].find("div", attrs={"class": "article-body"}).find_all("p"):
-                        body += " ".join([x.encode("utf-8").strip() for x in block.strings]) + " "
+                        body += " ".join([x.encode("utf-8").strip() for x in block.strings if "Follow @politicalticker" not in x]) + " "
                     
                     if (extract[0].find("div", attrs={"class": "article-body"}).p.next_sibling != None):
                         try:
