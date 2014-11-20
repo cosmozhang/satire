@@ -11,4 +11,5 @@ vecdis/tokened/*
 vecdis/tokened_head/*
 vecdis/vectorized/*
 vecdis/vectorized_head/*
-
+*.data
+*.png

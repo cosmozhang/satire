@@ -15,7 +15,7 @@ def vecsamplevar(ls):
     mean = np.mean(vecs, axis = 0)
     disls = []
     for vec in ls:
-        disls.append(LA.norm(np.subtract(vec, mean), 2))
+        disls.append(LA.norm(np.subtract(vec, mean), 2)) #get distance for each vector to mean vector
 
     avgdis = sum(disls)*1.0/(len(disls))
     return avgdis
@@ -43,7 +43,7 @@ def get_file_list(dir_path):
 
 
 def plotting(ls1, ls2, head):
-    # print ls1, ls2
+    # ls1 normal, ls2 satire
     mu1 = np.mean(ls1)
     mu2 = np.mean(ls2)
     sigma1 = np.std(ls1) # standard deviation of distribution
@@ -66,7 +66,7 @@ def plotting(ls1, ls2, head):
     plt.plot(bins1, x1, 'b--')
     plt.plot(bins2, y2, 'b--')
     plt.xlabel('Variance')
-    plt.ylabel('Probability')
+    plt.ylabel('Density')
     plt.title('Distribution of docs')
     
 
