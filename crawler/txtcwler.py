@@ -68,7 +68,7 @@ def CreateCnnText():
     f=open('normallinks.txt','r')
     data = f.readlines()
     n=0
-        
+    stupidpattern = r'Follow@[^ ]+ '    
     for line in data:
         
         url = "http://"+line.split(": ")[1]
@@ -99,6 +99,9 @@ def CreateCnnText():
                     # print body
                 '''
                 if len(body) > 50:
+                    stupidats = re.findall(stupidpattern, body)
+                    for stupidat in stupidats:
+                        body = body.replace(stupidat, '')
                     n += 1
                     h = open('../rawdata/cnntxts/normal-' + str(n) +'.txt', 'w')
                     h.write(head + "\n" + body.replace("FULL STORY", "") + "\n" + line.split(": ")[0] + "\n")

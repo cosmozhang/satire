@@ -1,6 +1,6 @@
 ## Cosmo Zhang @ Purdue 11/2014
 ## nlp project1
-## Filename:sdfpreprocess.py
+## Filename:malttest.py
 ## -*- coding: utf-8 -*-
 
 import gc
@@ -12,7 +12,7 @@ import string
 import numpy
 reload(sys)
 import nltk
-from nltk.parse.stanford import StanfordParser
+from nltk.parse.malt import MaltParser
 from pprint import pprint
 sys.setdefaultencoding("utf-8")
 
@@ -29,8 +29,8 @@ def preprocess(s):
     # print s
     return s.strip()
 
-def sdfprocess(tp, path, filenamels, docid):
-    parser=StanfordParser(path_to_jar='/home/cosmo/Dropbox/Purdue/nlp/stanford-corenlp-full-2014-08-27/stanford-corenlp-3.4.1.jar', path_to_models_jar='/home/cosmo/Dropbox/Purdue/nlp/stanford-corenlp-full-2014-08-27/stanford-corenlp-3.4.1-models.jar', model_path='edu/stanford/nlp/models/lexparser/englishPCFG.ser.gz', java_options='-mx5000m')
+def mltprocess(tp, path, filenamels, docid):
+    parser=MaltParser(working_dir='/home/cosmo/Dropbox/Purdue/nlp/maltparser-1.8/maltparser-1.8.jar', mco='engmalt.poly-1.7.mco', additional_java_args='-mx5000m')
     sdfdata = []
     for i in range(len(filenamels)):
         if (i+1)%100 == 0: print "%f%% of document %d of %s finished" % ((i+1)*100*1.0/len(filenamels), docid, tp) 
@@ -41,7 +41,7 @@ def sdfprocess(tp, path, filenamels, docid):
         headraw, bodyraw = preprocess(lines[0]), preprocess(lines[1])
 
         sentences = [headraw] + nltk.sent_tokenize(bodyraw)
-        sdfparsed = parser.raw_parse_sents(sentences)
+        sdfparsed = [parser.raw_parse(sentence) for sentence in sentences]
         sdfdata.append(sdfparsed)
         # print sdfparsed
         # print sdfdata      

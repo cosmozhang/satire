@@ -5,6 +5,8 @@ stanfordnlp/*
 *.csv
 rawdata/cnntxts/*
 rawdata/oniontxts/*
+annotated/cnntxts/*
+annotated/oniontxts/*
 *.tar.gz
 wordrep/*
 vecdis/tokened/*
@@ -13,3 +15,7 @@ vecdis/vectorized/*
 vecdis/vectorized_head/*
 *.data
 *.png
+*.txt
+notes/*
+*.o
+
