@@ -52,7 +52,11 @@ def preprocess(s):
         # print toreplace[0]
         s = s.replace(toreplace[0], '')
     # print s.strip()
-    return s.strip().replace(u'(CNN) - ', u'')
+    try:
+        return s.strip().replace(u'(CNN) - ', u'').encode('ascii')
+    except Exception, e:
+        print e
+        sys.exit('debug')
 
 def sdfprocess(tp, path, filenamels):
     parser=NERTagger(path_to_model='/home/cosmo/Dropbox/Purdue/nlp/stanford-corenlp-full-2014-08-27/english.all.3class.distsim.crf.ser.gz', path_to_jar='/home/cosmo/Dropbox/Purdue/nlp/stanford-corenlp-full-2014-08-27/stanford-corenlp-3.4.1.jar', java_options='-mx2000m')

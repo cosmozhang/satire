@@ -1,5 +1,5 @@
 oldsatire/*
-pyexamples/*
+pysvml/*
 svml/*
 stanfordnlp/*
 *.csv
@@ -18,4 +18,4 @@ vecdis/vectorized_head/*
 *.txt
 notes/*
 *.o
-
+*.dat
