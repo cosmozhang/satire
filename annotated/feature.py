@@ -21,24 +21,8 @@ from pprint import pprint
 from progressbar import *
 sys.setdefaultencoding("utf-8")
 
-def rechunk(ner_output):
-    chunked, pos, prev_tag = [], "", None
-    for i, word_pos in enumerate(ner_output):
-        word, pos = word_pos
-        if pos in ['PERSON', 'ORGANIZATION', 'LOCATION'] and pos == prev_tag:
-            chunked[-1]+=word_pos
-        else:
-            chunked.append(word_pos)
-        prev_tag = pos
-
-
-    clean_chunked = [tuple([" ".join(wordpos[::2]), wordpos[-1]]) 
-                    if len(wordpos)!=2 else wordpos for wordpos in chunked]
-
-    return clean_chunked
 
 def name_title(data):
-    parser=NERTagger(path_to_model='/home/cosmo/Dropbox/Purdue/nlp/stanford-corenlp-full-2014-08-27/english.all.3class.distsim.crf.ser.gz', path_to_jar='/home/cosmo/Dropbox/Purdue/nlp/stanford-corenlp-full-2014-08-27/stanford-corenlp-3.4.1.jar', java_options='-mx2000m')
     widgets = ['Progress: ', Percentage(), ' ', Bar(marker=RotatingMarker()), ' ', ETA(), ' ', FileTransferSpeed()]
     pbar = ProgressBar(widgets=widgets, maxval=len(filenamels)).start()
     

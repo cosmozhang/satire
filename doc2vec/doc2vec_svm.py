@@ -17,50 +17,39 @@ from nltk.corpus import stopwords
 import itertools
 from nltk.collocations import BigramCollocationFinder
 from nltk.probability import FreqDist, ConditionalFreqDist
-# import scipy
 import sys
-# from hw1 import *
+import cPickle as cpcl
 import gensim, logging
-from nltk.corpus import movie_reviews
 reload(sys)  
-# sys.setdefaultencoding('utf8')
-
-def get_file_list(dir_path):
-
-    file_list = []
-    for each in os.listdir(dir_path):
-        if each.endswith(".txt"):
-            file_list.append(each) 
-    return file_list
+sys.setdefaultencoding('utf8')
 
 def main():
     model = gensim.models.Doc2Vec.load('doc2vec_model')
-    dataset = [[], [], []]
-    categories = ['pos', 'neg']
-    parent_dir_path = '/home/cosmo/Dropbox/Purdue/CS590/hws/hw1/tokens/'
-    endidxs = [0, 233, 466, 699]
-    # print len(dataset)
-    
-    for idx in range(3):
-        filerange = range(endidxs[idx], endidxs[idx+1])
-        for category in categories:
-            for fileid in get_file_list(parent_dir_path + category):
-                if int(fileid[2:5]) in filerange:
-                    docvec = model['Doc_%s' % (category + '-' + fileid)]
-                    
-                    egfvec = [str(ind+1) + ':' + str(value) for ind, value in enumerate(docvec)]
+    f = open('data.dat', 'rb')
+    data = cpcl.load(f)
+    f.close
+    datalen = len(data)    
+    sublen = int(datalen/5.0)
+    indls = [0, sublen, 2*sublen, 3*sublen, 4*sublen, datalen]
+    dataset = [[] for x in range(len(indls)-1)]
 
-                    if category == "neg":
-                        label = "-1 "
-                    elif category == "pos":
-                        label = "+1 "
-                    dataset[idx].append(label + ''.join(' '.join(egfvec)))
+    
+    for idx in range(len(indls)-1):
+        for docid in range(indls[idx], indls[idx+1]):
+            docvec = model["Doc_%s" % str(docid)]
+            doc = data[docid]        
+            egfvec = [str(ind+1) + ':' + str(value) for ind, value in enumerate(docvec)]
+            if data[docid][1] == "neg":
+                label = "-1 "
+            elif data[docid][1] == "pos":
+                label = "+1 "
+            dataset[idx].append(label + ''.join(' '.join(egfvec)))
         random.shuffle(dataset[idx])
 
-    idset = [(0, 1, 2), (1, 2, 0), (2, 0, 1)]
-    for (i, j, k) in idset:
+    idset = [(0, 1, 2, 3, 4), (1, 2, 3, 4, 0), (2, 3, 4, 0, 1), (3, 4, 0, 1, 2), (4, 0, 1, 2, 3)]
+    for (i, j, k, m, n) in idset:
         f = open('train_dataset4svm_' + str(i) + '.csv', 'w')
-        for line in (dataset[j] + dataset[k]):
+        for line in (dataset[j] + dataset[k] + dataset[m] + dataset[n]):
             f.write(line + '\n')
         f.close()
         

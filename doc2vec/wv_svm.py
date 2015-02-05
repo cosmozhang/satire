@@ -17,46 +17,36 @@ from nltk.corpus import stopwords
 import itertools
 from nltk.collocations import BigramCollocationFinder
 from nltk.probability import FreqDist, ConditionalFreqDist
-# import scipy
-import sys
-# from hw1 import *
 import gensim, logging
-from nltk.corpus import movie_reviews
+import cPickle as cpcl
+import sys
 reload(sys)  
-# sys.setdefaultencoding('utf8')
+sys.setdefaultencoding('utf8')
 
 
 class MySentences(object):
-    def __init__(self, dirname):
-        self.dirname = dirname
+    def __init__(self, dt):
+        self.dt = dt
         
     def __iter__(self):
-        for category in ['pos', 'neg']:
-            for fname in os.listdir(self.dirname + category):
-                if fname.endswith('.txt'):
-                    # try:
-                    egwords = [word_tokenize(sentence) for sentence in sent_tokenize(codecs.open(os.path.join(self.dirname, category, fname), 'r', 'latin2').read().decode('utf-8'))]
-                    # except:
-                        # print os.path.join(self.dirname, category, fname)
-                    for sid, sentence in enumerate(egwords):
-                        # print uid
-                        # print (category + '-' + fname)
-                        yield gensim.models.doc2vec.LabeledSentence(words=sentence, labels=['SENT_%s' % (category + '-' + fname + '-' + str(sid)), 'Doc_%s' % (category + '-' + fname)])
+            for docid in range(len(self.dt)):
+                for qid in range(len(self.dt[docid][0])):
+                    sinqs = [word_tokenize(sentence) for sentence in self.dt[docid][0][qid]]
+                    for sid, sentence in enumerate(sinqs):
+                        yield gensim.models.doc2vec.LabeledSentence(words=sentence, labels=['SENT_%s' % (str(docid) + '-' + str(qid) + '-' + str(sid)), "Doc_%s" % str(docid)])
                         
 
 def main():
-    #read data
-    # dataset, allwords = getdataset()
-    # print dataset[0][1]
-    parent_dir_path = '/home/cosmo/Dropbox/Purdue/CS590/hws/hw1/tokens/'
-    sentences = MySentences(parent_dir_path)
-    # sentences = [gensim.models.doc2vec.LabeledSentence(words=[u'some', u'words', u'here'], labels=[u'SENT_1']), gensim.models.doc2vec.LabeledSentence(words=[u'give', u'a', u'shot'], labels=[u'SENT_2'])]
-    # print sentences
-    # print type(sentences)
+
+    f = open('data.dat', 'rb')
+    data = cpcl.load(f)
+    f.close()
+    
+    sentences = MySentences(data)
+
     logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
     
-    # pass
-    model = gensim.models.Doc2Vec(alpha=0.025, min_alpha=0.025)  # use fixed learning rate
+    model = gensim.models.Doc2Vec(alpha=0.025, min_alpha=0.025, workers=4, size=50, min_count=1)  # use fixed learning rate
     model.build_vocab(sentences)
 
     for epoch in range(10):
