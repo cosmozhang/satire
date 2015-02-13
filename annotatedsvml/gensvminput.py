@@ -74,12 +74,68 @@ def getbinf(odt, ils):
             ndt[idx].append(label + ''.join(' '.join(fvect)))
     return ndt
 
+def getsf(odt, ils):
+    ndt = [[] for x in range(len(ils)-1)]
+    wdic = {}
+    for idx in range(len(ils)-1):
+        for i in range(ils[idx], ils[idx+1]):
+            fvec = {}
+            # print i
+            for eachquote in odt[i][0]:
+                speaker = eachquote[0]
+                for word in word_tokenize(speaker):
+                    if word not in wdic: #global dic
+                        wdic[word] = {'index':len(wdic)+1, 'num':1}
+                    else:
+                        wdic[word]['num'] += 1
+                    fvec[wdic[word]['index']] = 1
+            fvecls = sorted(fvec.items(), key = lambda x: x[0], reverse = False)
+            fvect = [str(x[0]) + ':' + str(x[1]) for x in fvecls]
+            if odt[i][1] == "neg":
+                label = "-1 "
+            elif odt[i][1] == "pos":
+                label = "+1 "
+            ndt[idx].append(label + ''.join(' '.join(fvect)))
+    return ndt
+
+
+def getqf(odt, ils):
+    ndt = [[] for x in range(len(ils)-1)]
+    wdic = {}
+    for idx in range(len(ils)-1):
+        for i in range(ils[idx], ils[idx+1]):
+            fvec = {}
+            # print i
+            for eachquote in odt[i][0][1:]:
+                for sent in eachquote:
+                    for word in word_tokenize(sent):
+                        if word not in wdic: #global dic
+                            wdic[word] = {'index':len(wdic)+1, 'num':1}
+                        else:
+                            wdic[word]['num'] += 1
+                        fvec[wdic[word]['index']] = 1
+            fvecls = sorted(fvec.items(), key = lambda x: x[0], reverse = False)
+            fvect = [str(x[0]) + ':' + str(x[1]) for x in fvecls]
+            if odt[i][1] == "neg":
+                label = "-1 "
+            elif odt[i][1] == "pos":
+                label = "+1 "
+            ndt[idx].append(label + ''.join(' '.join(fvect)))
+    return ndt
+
+
 def main():
     print sys.argv[1:]
     if ('-B' in sys.argv[1:]) or ('binary' in sys.argv[1:]):
         ftype = "binary"
     elif ('-F' in sys.argv[1:]) or ('frequency' in sys.argv[1:]):
         ftype = "frequency"
+    elif ('-S' in sys.argv[1:]) or ('speaker' in sys.argv[1:]):
+        ftype = "speaker"
+    elif ('-Q' in sys.argv[1:]) or ('quote' in sys.argv[1:]):
+        ftype = "quote"
+    elif ('-O' in sys.argv[1:]) or ('original' in sys.argv[1:]):
+        ftype = "original"
     else:
         print 'format: python %s [-B/-F]' % sys.argv[0]  
         sys.exit(1)
@@ -97,7 +153,24 @@ def main():
     if ftype == 'frequency':
         print "generate frequency features"
         dataset = getfref(data, indls)
+        
+    if ftype == 'speaker':
+        print "generate speaker bin features"
+        dataset = getsf(data, indls)
 
+    if ftype == 'quote':
+        print "generate quote bin features"
+        dataset = getqf(data, indls)
+
+    if ftype == 'original':
+        g = open('../annotated/odata.dat', 'rb')
+        odata = cpcl.load(g)
+        g.close
+        odatalen = len(odata)    
+        sublen = int(odatalen/5.0)
+        indls = [0, sublen, 2*sublen, 3*sublen, 4*sublen, datalen]
+        print "generate original bin features"
+        dataset = getfref(odata, indls)
 
     idset = [(0, 1, 2, 3, 4), (1, 2, 3, 4, 0), (2, 3, 4, 0, 1), (3, 4, 0, 1, 2), (4, 0, 1, 2, 3)]
     for (i, j, k, m, n) in idset:
