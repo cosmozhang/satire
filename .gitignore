@@ -7,7 +7,7 @@ rawdata/cnntxts/*
 rawdata/oniontxts/*
 annotated/cnntxts/*
 annotated/oniontxts/*
-*.tar.gz
+*.gz
 wordrep/*
 vecdis/tokened/*
 vecdis/tokened_head/*
@@ -19,3 +19,5 @@ vecdis/vectorized_head/*
 notes/*
 *.o
 *.dat
+*.bin
+*.zip

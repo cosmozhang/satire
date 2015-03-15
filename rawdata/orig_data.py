@@ -37,13 +37,11 @@ def getdata(data, filepath, category):
     lines = h.readlines()
     h.close()
     
-    neweg = []
-    for line in lines[1:-1]:
-        line = preprocess(line)
-        newline = [each.strip('"') for each in line.split(' "')]
+    neweg = ''.join(lines[:-1])
+    neweg = preprocess(neweg)
         
-        neweg.append(newline)
-    data.append([neweg, category])
+    
+    data.append([[[neweg]], category])
 
 
 def main():

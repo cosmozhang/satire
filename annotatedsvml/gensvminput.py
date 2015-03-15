@@ -141,7 +141,7 @@ def main():
         sys.exit(1)
     f = open('../annotated/data.dat', 'rb')
     data = cpcl.load(f)
-    f.close
+    f.close()
     datalen = len(data)    
     sublen = int(datalen/5.0)
     indls = [0, sublen, 2*sublen, 3*sublen, 4*sublen, datalen]
@@ -165,12 +165,12 @@ def main():
     if ftype == 'original':
         g = open('../annotated/odata.dat', 'rb')
         odata = cpcl.load(g)
-        g.close
+        g.close()
         odatalen = len(odata)    
         sublen = int(odatalen/5.0)
         indls = [0, sublen, 2*sublen, 3*sublen, 4*sublen, datalen]
         print "generate original bin features"
-        dataset = getfref(odata, indls)
+        dataset = getbinf(odata, indls)
 
     idset = [(0, 1, 2, 3, 4), (1, 2, 3, 4, 0), (2, 3, 4, 0, 1), (3, 4, 0, 1, 2), (4, 0, 1, 2, 3)]
     for (i, j, k, m, n) in idset:

@@ -15,84 +15,30 @@ import numpy
 reload(sys)
 import nltk
 import re
-from nltk.tag.stanford import NERTagger
+#from nltk.tag.stanford import NERTagger
 from nltk.tokenize import word_tokenize
 from pprint import pprint
 from progressbar import *
 sys.setdefaultencoding("utf-8")
 
 
-def name_title(data):
-    widgets = ['Progress: ', Percentage(), ' ', Bar(marker=RotatingMarker()), ' ', ETA(), ' ', FileTransferSpeed()]
-    pbar = ProgressBar(widgets=widgets, maxval=len(filenamels)).start()
-    
-    for idx in range(len(data)):
-        for qidx in range(len(data[idx][0])):
-            part = data[idx][0][qidx]
-            name = rechunk(parser.tag(word_tokenize(part)))
-            if name != None:
-                title = part.replace(name, '')
-            else:
-                title = part
-            data[idx][0][qidx] = [title, name]
-        
-        # print bodyraw
-        bodysenls = [ele.decode('utf-8') for ele in nltk.sent_tokenize(bodyraw)]
-        sentences = [headraw] + bodysenls
-        sdfparsed = []
-        for sentence in sentences:
-            # print type(sentence)
-            try:
-                sdfparsed.append(rechunk(parser.tag(word_tokenize(sentence))))
-            except:
-                print filename
-                sys.exit('debug')
-
-        sdfdata.append((sentences, sdfparsed))
-        # print sentences[0]
-        # print sdfparsed
-        pbar.update(idx + 1)
-        # print sdfdata      
-        # if i > 5: break
-    return (sdfdata)
-
-
-
-
-
-
-
-
-
-
-
-def freebasequery():
+def freebasequery(data):
     api_key = open("api_key").read()
     service_url = 'https://www.googleapis.com/freebase/v1/search'
 
-    f = open('data.dat', 'rb')
-    satiredata = cpcl.load(f)
-    f.close()
-
-    g = open('testres.txt', 'w')
-    h = open('notfamous.txt', 'w')
-    for each in satiredata:
-        # print each[0]
-        g.write('\tdocument level\n')
-        for sentence in each[1]:
-            g.write('\t\tsentence level\n')
-            for element in sentence:
-                if element[1] == 'PERSON' or element[1] == 'ORGANIZATION':
-                    # print element
-                    g.write('\t\t\tentity level:' + element[0] + ', ' + element[1]+ '\n')
-                    query = element[0]
-                    params = {
-                        'query': query,
-                        'key': api_key
-                        }
-                    url = service_url + '?' + urllib.urlencode(params)
-
-                    response = json.loads(urllib.urlopen(url).read())
+    for each in data:
+        if each[1] = 'neg':
+            label = 0
+        elif each[1] = 'pos':
+            label = 1
+        
+        query = element[0]
+        params = {
+            'query': query,
+            'key': api_key
+            }
+        url = service_url + '?' + urllib.urlencode(params)
+        response = json.loads(urllib.urlopen(url).read())
                     # print response
                     # '''
                     # g = open('testres.txt', 'w')
@@ -123,8 +69,9 @@ def freebasequery():
 
 
 def main():
-    
-
+    f = open('../annotated/data.dat', 'rb')
+    data = cpcl.load(f)
+    f.close
 
 
 
