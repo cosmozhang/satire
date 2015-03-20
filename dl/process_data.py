@@ -1,3 +1,8 @@
+# Cosmo Zhang @ Purdue 2015/3
+# Filename: process_data.py
+# For satire, using dl
+# -*- coding: utf-8 -*-
+
 import numpy as np
 import cPickle as cpcl
 from collections import defaultdict
@@ -47,7 +52,7 @@ def get_W(word_vecs, k=300):
         W[i] = word_vecs[word]
         word_idx_map[word] = i
         i += 1
-    return W, word_idx_map
+    return W, word_idx_map # W is all the word vectors
 
 #function to read-in the word vector bin file
 def load_bin_vec(fname, vocab):
